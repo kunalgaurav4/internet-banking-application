@@ -12,5 +12,6 @@ public class Account {
     private Set<Customer> customers;
     private Set<Nominee> nominees;
     private Set<Beneficiary> beneficiaries;
+    private Set<Transaction> transaction;
     
  }
