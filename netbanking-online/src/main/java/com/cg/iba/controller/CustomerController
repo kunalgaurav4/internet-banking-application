@@ -1,0 +1,90 @@
+/package com.cg.iba.controller;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cg.iba.entities.Customer;
+import com.cg.iba.service.ICustomerService;
+import com.cg.iba.exception.DetailsNotFoundException;
+import com.cg.iba.exception.InvalidDetailsException;
+
+
+@RestController
+@RequestMapping("/customer")
+public class CustomerController {
+	@Autowired
+	 ICustomerService ics;
+	
+	@PostMapping("/add")
+	public List<Customer> addCustomer(@RequestBody Customer customer) throws  InvalidDetailsException {
+		List<Customer> n=null;
+		try {
+			n=ics.addCustomer(customer);
+		}
+		catch(Exception e) {
+			throw new InvalidDetailsException("The details given are not valid!");
+		}
+		return n;
+		
+	}
+	
+	  @PutMapping("/update") 
+	  public List<Customer> updateCustomer(@RequestBody Customer customer) throws InvalidDetailsException  {
+		  List<Customer> n=null;
+		  try {
+			  n= ics.updateCustomer(customer); }
+		  catch(Exception e) {
+				throw new InvalidDetailsException("The details given are not valid!");
+			}
+		  return n; 
+		}
+	  
+	  @DeleteMapping("/delete/{customerId}") 
+	  public List<Customer> deleteCustomer(@PathVariable int customerId) throws DetailsNotFoundException {
+		  List<Customer> n=null;
+		  try {
+			  n= ics.deleteCustomer(customerId); 
+		  }
+			catch(Exception e) {
+				throw new DetailsNotFoundException("The given ID is not found!");
+			}
+	  	  return n; 
+	
+	}
+	  
+	  @GetMapping("/find/{customerId}") 
+	  public Customer findCustomerById(@PathVariable int customerId) throws DetailsNotFoundException {
+		  Customer n=null;
+		  try {
+			  n=ics.findCustomerById(customerId);
+		  }
+			catch(Exception e) {
+				throw new DetailsNotFoundException("The given ID is not found!");
+			}
+		  return n;
+		 
+	  }
+	  
+	 
+	/*@GetMapping("/all/{minBalance}")
+	public Set<Customer> listAllCustomers(double minBalance) {
+		return ics.listAllCustomers(minBalance);
+	}
+	@GetMapping("/view/{accountid}")
+	public Customer viewCustomerDetails(int accountid) {
+		return ics.viewCustomerDetails(accountid);
+	}*/
+}
