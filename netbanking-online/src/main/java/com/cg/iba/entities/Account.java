@@ -2,6 +2,9 @@ package com.cg.iba.entities;
 
 //import java.time.Date;
 import java.util.Date;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
@@ -11,11 +14,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Account {
 
 //	@GeneratedValue(generator = "sequence-generator")
@@ -36,13 +40,13 @@ public class Account {
 	private double interestRate;
 	private double balance;
 	private AccountType accountType;
-	
+
 //	@Temporal(TemporalType.DATE)
 //	private Date dateOfOpening;
-	
+
 //	private Set<Customer> customers;
-//	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-//	private Set<Nominee> nominees;
+	 @OneToMany(mappedBy = "account")
+	private Set<Nominee> nominees;
 //	private Set<Beneficiary> beneficiaries;
 //	private Set<Transaction> transaction;
 
@@ -50,13 +54,14 @@ public class Account {
 
 	}
 
-	public Account(int accountId, double interestRate, double balance, AccountType accountType) {
+	public Account(int accountId, double interestRate, double balance, AccountType accountType, Set<Nominee> nominees) {
 		super();
 		this.accountId = accountId;
 		this.interestRate = interestRate;
 		this.balance = balance;
 //		this.dateOfOpening = dateOfOpening;
 		this.accountType = accountType;
+		this.nominees = nominees;
 	}
 
 	public int getAccountId() {
@@ -83,8 +88,6 @@ public class Account {
 		this.balance = balance;
 	}
 
-
-
 	public AccountType getAccountType() {
 		return accountType;
 	}
@@ -93,5 +96,12 @@ public class Account {
 		this.accountType = accountType;
 	}
 
+	public Set<Nominee> getNominees() {
+		return nominees;
+	}
+
+	public void setNominees(Set<Nominee> nominees) {
+		this.nominees = nominees;
+	}
 
 }
