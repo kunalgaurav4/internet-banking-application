@@ -1,18 +1,22 @@
 package com.cg.iba.repository;
 
+
 import java.util.Set;
 
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.cg.iba.entities.Account;
 import com.cg.iba.entities.Nominee;
-import com.cg.iba.exception.DetailsNotFoundException;
-import com.cg.iba.exception.EmptyListException;
-import com.cg.iba.exception.InvalidAccountException;
-import com.cg.iba.exception.InvalidDetailsException;
 
-public interface INomineeRepository {
 
-	public Nominee addNominee(Nominee nominee) throws InvalidDetailsException;
-	public Nominee updateNominee(Nominee nominee) throws InvalidDetailsException;
-	public boolean deleteNominee(long nomineeId) throws DetailsNotFoundException ;
-	public Nominee findNomineeById(long nomineeId)throws DetailsNotFoundException ;
-	public Set<Nominee> listAllNominees(long accountid) throws InvalidAccountException, EmptyListException ;
+
+@Repository
+public interface INomineeRepository extends JpaRepository<Nominee, Integer>{
+	
+	//@Query("select e from Nominee e where e.accountId='accountId'")
+	//public Set<Account> findByAccount(@Param("accountId")int accountId);
 }
