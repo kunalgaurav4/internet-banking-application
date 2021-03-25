@@ -1,0 +1,37 @@
+package com.cg.iba.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cg.iba.entities.Transaction;
+import com.cg.iba.service.ITransactionService;
+
+@RestController
+@RequestMapping("/transaction")
+public class TransactionController {
+	@Autowired
+	ITransactionService TransService;
+
+	@PostMapping("/create")
+	public List<Transaction> createTransaction(@RequestBody Transaction transaction) {
+		return (List<Transaction>) TransService.createTransaction(transaction);
+	}
+
+	@GetMapping("/find/{transactionId}")
+	public Transaction findTransactionByid(@PathVariable int transactionId) {
+		return TransService.findTransactionById(transactionId);
+	}
+
+	@GetMapping("/view/{transactionId}")
+	public Transaction viewTransactionByid(@PathVariable int transactionId) {
+		return TransService.viewTransaction(transactionId);
+	}
+
+}
