@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Beneficiary {
 	@Id
-	private int beneficiaryId;
+	private long beneficiaryId;
 	private String beneficiaryName;
 	private int beneficiaryAccNo;
 	private String IFSC;
@@ -23,7 +23,7 @@ public class Beneficiary {
 
 	}
 
-	public Beneficiary(int beneficiaryId, String beneficiaryName, int beneficiaryAccNo, String iFSC,AccountType accountType) {
+	public Beneficiary(long beneficiaryId, String beneficiaryName, int beneficiaryAccNo, String iFSC,AccountType accountType) {
 		super();
 		this.beneficiaryId = beneficiaryId;
 		this.beneficiaryName = beneficiaryName;
@@ -32,7 +32,7 @@ public class Beneficiary {
 		this.accountType=accountType;
 	}
 
-	public int getBeneficiaryId() {
+	public long getBeneficiaryId() {
 		return beneficiaryId;
 	}
 
