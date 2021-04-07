@@ -8,6 +8,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+/**
+ * 
+ * @author Aman Paul
+ * @version 1.0
+ */
 @Entity
 public class Nominee {
 	@Id
@@ -19,15 +26,13 @@ public class Nominee {
 	private Relation relation;
 
 	@ManyToOne
-	@JoinColumn(name="accountId",referencedColumnName = "accountId")
+	@JoinColumn(name = "accountId", referencedColumnName = "accountId")
+
 	private Account account;
-//	private SavingsAccount savings_account;
 
 	public String getGovtIdType() {
 		return govtIdType;
 	}
-
-	
 
 	public void setGovtIdType(String govtIdType) {
 		this.govtIdType = govtIdType;
@@ -73,21 +78,6 @@ public class Nominee {
 		this.phoneNo = phoneNo;
 	}
 
-		
-//	
-//	public SavingsAccount getSavings_account() {
-//		return savings_account;
-//	}
-//
-//
-//
-//	public void setSavings_account(SavingsAccount savings_account) {
-//		this.savings_account = savings_account;
-//	}
-
-	
-
-
 	public Nominee() {
 
 	}
@@ -96,13 +86,9 @@ public class Nominee {
 		return account;
 	}
 
-
-
 	public void setAccount(Account account) {
 		this.account = account;
 	}
-
-
 
 	public Nominee(int nomineeId, String name, String govtId, String govtIdType, String phoneNo, Relation relation) {
 		super();
@@ -114,22 +100,9 @@ public class Nominee {
 		this.relation = relation;
 	}
 
-
-
 	public Nominee(Account account) {
 		super();
 		this.account = account;
 	}
-
-//
-//
-//	public Nominee(SavingsAccount savings_account) {
-//		super();
-//		this.savings_account = savings_account;
-//	}
-	
-	
-	
-	
 
 }
