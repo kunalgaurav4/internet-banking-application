@@ -1,0 +1,97 @@
+package com.cg.iba.controller;
+
+import java.util.List;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cg.iba.entities.Admin;
+import com.cg.iba.exception.DetailsNotFoundException;
+import com.cg.iba.exception.EmptyListException;
+import com.cg.iba.exception.InvalidDetailsException;
+import com.cg.iba.service.IAdminService;
+
+/**
+ * 
+ * @author Gayathri
+ * @version 1.0
+ *
+ */
+
+@RestController
+@RequestMapping("/admin")
+
+public class AdminController {
+	@Autowired
+	 IAdminService ins;
+	
+	@PostMapping("/add")
+	public List<Admin> addAdmin(@RequestBody Admin admin) throws InvalidDetailsException{
+		List<Admin> n=null;
+		try {
+			n=ins.addAdmin(admin);
+		}
+		catch(Exception e) {
+			throw new InvalidDetailsException("The details given are not valid!");
+		}
+		return n;
+	}
+	@PutMapping("/update") 
+	  public List<Admin> updateAdmin(@RequestBody Admin admin) throws InvalidDetailsException 
+	  	{ 
+		  List<Admin> n=null;
+		  try {
+			  n= ins.updateAdmin(admin); }
+		  catch(Exception e) {
+				throw new InvalidDetailsException("The details given are not valid");
+			}
+			return n;
+		}
+	@DeleteMapping("/delete/{adminId}") 
+	  public List<Admin> deleteAdmin(@PathVariable long adminId)throws DetailsNotFoundException{ 
+	  List<Admin> n=null;
+	  try {
+		  n= ins.deleteAdmin(adminId); 
+	  }
+		catch(Exception e) {
+			throw new DetailsNotFoundException("The given ID is deleted");
+		}
+		return n;
+	}
+	@GetMapping("/find/{adminId}") 
+	  public Admin findAdminById(@PathVariable long adminId)throws DetailsNotFoundException{
+		  Admin n=null;
+		  try {
+			  n=ins.findAdminById(adminId);
+		  }
+			catch(Exception e) {
+				throw new DetailsNotFoundException("The given ID is not found");
+			}
+			return n;
+	  }
+	@GetMapping("all/{admin}")
+		public List<Admin> listAllAdmin(@PathVariable Admin admin) throws InvalidDetailsException,EmptyListException{
+		List<Admin> n=null;
+		try {
+			n=ins.listAllAdmin();
+			throw new InvalidDetailsException("No admin found");
+		}
+		catch (InvalidDetailsException e) {
+			
+		}
+		catch(Exception e1) {
+			throw new EmptyListException("the details is not valid");
+		}
+			return n;
+		}
+
+}
