@@ -1,16 +1,22 @@
 package com.cg.iba.service;
 
-import java.time.LocalDate;
-import java.util.Set;
-
+import java.util.List;
 import com.cg.iba.entities.Transaction;
 
+/**
+ * 
+ * @author Harinath Reddy
+ * @version 1.0
+ *
+ */
 public interface ITransactionService {
 
 	public Transaction createTransaction(Transaction transaction);
-	public Transaction viewTransaction(int transactionId) ;
-	public Transaction findTransactionById(int transactionId) ;
-	//public  Set<Transaction> listAllTransactions(int accountId) ;
-//	public  Set<Transaction> getAllMyAccTransactions(int account_id) ;
+
+	public Transaction viewTransaction(long transactionId);
+
+	public Transaction findTransactionById(long transactionId);
+
+	public List<Transaction> getAllMyAccTransactions(long accountId);
 
 }
