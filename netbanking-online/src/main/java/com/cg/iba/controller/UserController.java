@@ -13,48 +13,70 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cg.iba.bean.User;
+import com.cg.iba.entities.User;
+import com.cg.iba.exception.DetailsNotFoundException;
 import com.cg.iba.exception.InvalidDetailsException;
 import com.cg.iba.service.IUserService;
+import com.cg.iba.util.LoginService;
 
-
+/**
+ * 
+ * @author Eisha
+ * @version 1.0
+ *
+ */
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/user")
 public class UserController {
 
 	@Autowired
-	private IUserService userService;
+	private LoginService ls;
 
-	@PostMapping("/user")
+	@Autowired
+	private IUserService is;
+
+	@GetMapping("/user/{customerId}/{password}")
+	public String validateUser(@PathVariable("customerId") long customerId, @PathVariable("password") String password) {
+
+		User user = new User();
+		user.setCustomerId(customerId);
+		user.setPassword(password);
+		return ls.validateCredintals(user);
+	}
+
+	@PostMapping("/add")
 	public List<User> addNewUser(@RequestBody User user) throws InvalidDetailsException {
-		List<User> n=null;
+		List<User> n = null;
 		try {
-			n=userService.addNewUser(user);
-		}
-		catch(Exception e){
+			n = is.addNewUser(user);
+		} catch (Exception e) {
 			throw new InvalidDetailsException("Invalid Details!!!");
-			
+
 		}
-		return userService.addNewUser(user);
+		return n;
 	}
-	@PostMapping("/update")
-	public List<User> updateUserInfo(@RequestBody User user) throws InvalidDetailsException{
-		List<User> n=null;
+
+	@PutMapping("/update")
+	public List<User> updateUserInfo(@RequestBody User user) throws InvalidDetailsException {
+		List<User> n = null;
 		try {
-			n=userService.updateUserInfo(user);
-		}
-		catch(Exception e){
+			n = is.updateUserInfo(user);
+		} catch (Exception e) {
 			throw new InvalidDetailsException("Invalid Details!!!");
-			
+
 		}
-		return userService.updateUserInfo(user);
+		return n;
 	}
-	@DeleteMapping("/deleteuser/{userId}")
-	public Optional<User> deleteUserInfo(long userId){
-		return userService.deleteUserInfo(userId);
+
+	@DeleteMapping("/delete/{userId}")
+	public Optional<User> deleteUserInfo(long userId) throws DetailsNotFoundException {
+		Optional<User> n = null;
+		try {
+			n = is.deleteUserInfo(userId);
+		} catch (Exception e) {
+			throw new DetailsNotFoundException("The given ID could not be deleted!");
+		}
+		return n;
 	}
-	@GetMapping("/user")
-	public User signIn(@RequestBody User user) throws InvalidDetailsException {
-		return userService.signIn(user);
-	}
+
 }
