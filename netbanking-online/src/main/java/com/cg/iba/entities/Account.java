@@ -9,68 +9,79 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+/**
+ * @author Kunal Gaurav
+ * @version 1.0
+ */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Account {
 
-//	@GeneratedValue(generator = "sequence-generator")
-//	@GenericGenerator(
-//	name = "sequence-generator",
-//	strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-//			
-//    parameters = {
-//        @Parameter(name = "table_name", value = "REVISION_GENERATOR"),
-//        @Parameter(name = "initial_value", value = "200"),
-//        @Parameter(name = "increment_size", value = "1"),
-//        @Parameter(name = "prefer_entity_table_as_segment_value", value = "true")
-//	}
-//	)
-	@Id
+		@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int accountId;
+	private long accountId;
 	private double interestRate;
 	private double balance;
 	private AccountType accountType;
 
-//	@Temporal(TemporalType.DATE)
-//	private Date dateOfOpening;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate dateOfOpening;
 
-//	private Set<Customer> customers;
+	@ManyToOne
+	
+	private Customer customer;
+
 	@OneToMany(mappedBy = "account")
+	@JsonIgnore
 	private Set<Nominee> nominees;
-//	private Set<Beneficiary> beneficiaries;
-//	private Set<Transaction> transaction;
+
+	@OneToMany(mappedBy = "account")
+	@JsonIgnore
+	private Set<Beneficiary> beneficiaries;
+//
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+	private Set<Transaction> transaction;
 
 	public Account() {
 
 	}
 
-	public Account(int accountId, double interestRate, double balance, AccountType accountType, Set<Nominee> nominees) {
+	public Account(long accountId, double interestRate, double balance, AccountType accountType, Set<Nominee> nominees,
+			Set<Beneficiary> beneficiaries, Customer customer, Set<Transaction> transaction, LocalDate dateOfOpening) {
 		super();
 		this.accountId = accountId;
 		this.interestRate = interestRate;
 		this.balance = balance;
-//		this.dateOfOpening = dateOfOpening;
+		this.dateOfOpening = dateOfOpening;
 		this.accountType = accountType;
 		this.nominees = nominees;
+		this.transaction = transaction;
+		this.customer = customer;
+//	
+		this.beneficiaries = beneficiaries;
 	}
 
-	public int getAccountId() {
+	public long getAccountId() {
 		return accountId;
 	}
 
-	public void setAccountId(int accountId) {
+	public void setAccountId(long accountId) {
 		this.accountId = accountId;
 	}
 
@@ -105,5 +116,41 @@ public class Account {
 	public void setNominees(Set<Nominee> nominees) {
 		this.nominees = nominees;
 	}
+
+	public Set<Transaction> getTransaction() {
+		return transaction;
+	}
+
+	public void setTransaction(Set<Transaction> transaction) {
+		this.transaction = transaction;
+	}
+
+	public Set<Beneficiary> getBeneficiaries() {
+		return beneficiaries;
+	}
+
+	public void setBeneficiaries(Set<Beneficiary> beneficiaries) {
+		this.beneficiaries = beneficiaries;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	
+	
+	public LocalDate getDateOfOpening() {
+		return dateOfOpening;
+	}
+
+	public void setDateOfOpening(LocalDate dateOfOpening) {
+		this.dateOfOpening = dateOfOpening;
+	}
+
+
 
 }
