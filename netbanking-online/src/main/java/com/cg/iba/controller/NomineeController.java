@@ -1,5 +1,11 @@
 package com.cg.iba.controller;
 
+/**
+ * 
+ * @author Aman Paul
+ * @version 1.0
+ */
+
 import java.util.List;
 
 import java.util.Set;
@@ -17,9 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cg.iba.entities.Nominee;
 import com.cg.iba.exception.DetailsNotFoundException;
+import com.cg.iba.exception.EmptyListException;
+import com.cg.iba.exception.InvalidAccountException;
 import com.cg.iba.exception.InvalidDetailsException;
 import com.cg.iba.service.INomineeService;
-
 
 @RestController
 @RequestMapping("/nominee")
@@ -55,7 +62,7 @@ public class NomineeController {
 		try {
 			n = ins.deleteNominee(nomineeId);
 		} catch (Exception e) {
-			throw new DetailsNotFoundException("The given ID is deleted!");
+			throw new DetailsNotFoundException("The given ID is not found!");
 		}
 		return n;
 	}
@@ -72,7 +79,16 @@ public class NomineeController {
 	}
 
 	@GetMapping("all/{accountId}")
-	public List<Nominee> listAllNominees(@PathVariable int accountId) {
-		return ins.listAllNominees(accountId);
+	public Set<Nominee> listAllNominees(@PathVariable int accountId) throws EmptyListException {
+		Set<Nominee> n = null;
+		try {
+			n = ins.listAllNominees(accountId);
+			if (n.isEmpty()) {
+				throw new EmptyListException("No nominees is available!");
+			}
+		} catch (Exception e1) {
+			throw new EmptyListException("No nominees is available!");
+		}
+		return n;
 	}
 }
