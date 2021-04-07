@@ -1,51 +1,66 @@
-package com.cg.iba.bean;
+package com.cg.iba.entities;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
+/**
+ * 
+ * @author Eisha
+ * @version 1.0
+ *
+ */
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 	@Id
-	private Long userId;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long customerId;
 	private String password;
-	private Role role; 
-	
-	public User(Long userId, String password, Role role) {
+	private Role role;
+
+	public User(String password, Role role, long customerId) {
 		super();
-		this.userId = userId;
-		
+		this.customerId = customerId;
+
 		this.password = password;
 		this.role = role;
 	}
-	
-	public Long getUserId() {
-		return userId;
+
+	public long getCustomerId() {
+		return customerId;
 	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
+
+	public void setCustomerId(long customerId) {
+		this.customerId = customerId;
 	}
 
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public Role getRole() {
-		return role;
-	}
-	public void setRole(Role role) {
-		this.role = role;
-	}
+
 	public User() {
 		super();
 	}
 
-	
-	
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + customerId + ", password=" + password + ", role=" + role + "]";
+	}
+
 }
-
-
