@@ -11,17 +11,31 @@ import com.cg.iba.entities.Customer;
 import com.cg.iba.exception.InvalidDetailsException;
 import com.cg.iba.repository.ICustomerRepository;
 
+/**
+ * 
+ * @author Dileep
+ * @version 1.0
+ *
+ */
 @Service
 public class ICustomerServiceImpl implements ICustomerService {
 	@Autowired
 	ICustomerRepository iRep;
 
+	/**
+	 * @param Customer
+	 * @return List<Customer>
+	 */
 	@Override
 	public List<Customer> addCustomer(Customer customer) {
 		iRep.saveAndFlush(customer);
 		return iRep.findAll();
 	}
 
+	/**
+	 * @param Customer
+	 * @return List<Customer>
+	 */
 	@Override
 	public List<Customer> updateCustomer(Customer customer) {
 
@@ -29,26 +43,23 @@ public class ICustomerServiceImpl implements ICustomerService {
 		return iRep.findAll();
 	}
 
+	/**
+	 * @param customerId
+	 * @return List<Customer>
+	 */
 	@Override
-	public List<Customer> deleteCustomer(int customerId) {
+	public List<Customer> deleteCustomer(long customerId) {
 		iRep.deleteById(customerId);
 		return iRep.findAll();
 	}
 
+	/**
+	 * @param customerId
+	 * @return Customer
+	 */
 	@Override
-	public Customer findCustomerById(int customerId) {
+	public Customer findCustomerById(long customerId) {
 		return iRep.findById(customerId).get();
 	}
-
-	 /*@Override
-	 public Set<Customer> listAllCustomers(double minBalance) {
-	    return iRep.listAllCustomers(minBalance).get();
-	 }
-
-	@Override
-	public Customer viewCustomerDetails(int accountid) {
-		
-		return iRep.viewCustomerDetails(accountid).get();
-	}*/
 
 }
