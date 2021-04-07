@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cg.iba.entities.Beneficiary;
+import com.cg.iba.exception.EmptyListException;
+import com.cg.iba.exception.InvalidAccountException;
 import com.cg.iba.exception.InvalidDetailsException;
 import com.cg.iba.service.IBeneficiaryService;
 
@@ -39,7 +41,6 @@ public class BeneficiaryController {
 		}
 		
 		return n;
-		//return ibs.addBeneficiary(beneficiary);
 	}
 	
 	  @PutMapping("update") 
@@ -51,15 +52,14 @@ public class BeneficiaryController {
 		  }
 		  catch(Exception e)
 		  {
-			  throw new InvalidDetailsException("Invalid ID");
+			  throw new InvalidDetailsException("Wrong Details");
 			  
 		  }
 		  return n;
-		  //return ibs.updateBeneficiary(beneficiary); 
 		}
 	  
 	  @DeleteMapping("delete/{beneficiaryId}") 
-	  public Boolean deleteBeneficiary(@PathVariable long beneficiaryId) throws InvalidDetailsException
+	  public Boolean deleteBeneficiary(@PathVariable int beneficiaryId) throws InvalidDetailsException
 	  { 
 		  Boolean n=null;
 		  try {
@@ -70,11 +70,10 @@ public class BeneficiaryController {
 			  throw new InvalidDetailsException("Invalid id ");
 		  }
 		  return n;
-		  //return ibs.deleteBeneficiary(beneficiaryId); 
 	}
 	  
 	  @GetMapping("find/{beneficiaryId}") 
-	  public Beneficiary findBeneficiaryById(@PathVariable long beneficiaryId) throws InvalidDetailsException
+	  public Beneficiary findBeneficiaryById(@PathVariable int beneficiaryId) throws InvalidDetailsException
 	 {
 		  Beneficiary n=null;
 		  
@@ -86,12 +85,25 @@ public class BeneficiaryController {
 			  throw new InvalidDetailsException("Invalid Id");
 		  }
 		  return n;
-		  //return ibs.findBeneficiaryById(beneficiaryId);
 	  }
 	  
 	 
-	//@GetMapping("all/{accountid}")
-	//public Set<Nominee> listAllBeneficiaries(int accountid){
-		//return ins.listAllBeneficiaries(accountid);
-	//}
+	  @GetMapping("all/{accountId}")
+		public Set<Beneficiary> listAllBeneficiaries(@PathVariable int accountId) throws InvalidAccountException,EmptyListException {
+			Set<Beneficiary> n=null;
+			try {
+				n= ibs.listAllBeneficiaries(accountId);
+				throw new EmptyListException("Invalid details");
+			}
+			catch(EmptyListException e){
+				
+			}
+			
+			catch (Exception e) {
+				throw new InvalidAccountException("No Beneficiary is available!");
+			}
+			return n;
+		}
 }
+	  
+
