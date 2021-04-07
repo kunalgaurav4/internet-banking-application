@@ -80,16 +80,16 @@ public class BeneficiaryController {
 
 	@GetMapping("all/{accountId}")
 	public Set<Beneficiary> listAllBeneficiaries(@PathVariable long accountId)
-			throws InvalidAccountException, EmptyListException {
+			throws EmptyListException {
 		Set<Beneficiary> n = null;
 		try {
 			n = ibs.listAllBeneficiaries(accountId);
 			if(n.isEmpty()) {
-				throw new EmptyListException("No Beneficiary exists");
+				throw new EmptyListException("No  beneficiary with this accountId exists");
 			}
 			
 		}  catch(Exception e) {
-			throw new EmptyListException("No account with this beneficiary exist !");
+			throw new EmptyListException("No beneficiary with this accountId exist !");
 		}
 		return n;
 	}
