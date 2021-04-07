@@ -1,0 +1,163 @@
+package com.cg.iba.controller;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cg.iba.entities.Account;
+import com.cg.iba.entities.SavingsAccount;
+import com.cg.iba.entities.TermAccount;
+import com.cg.iba.entities.Transaction;
+import com.cg.iba.entities.TransactionStatus;
+import com.cg.iba.exception.InvalidAccountException;
+import com.cg.iba.exception.InvalidDetailsException;
+import com.cg.iba.service.IAccountService;
+/**
+ * @author Kunal Gaurav
+ * @version 1.0
+ */
+@RestController
+@RequestMapping("/account")
+public class AccountController {
+	@Autowired
+	IAccountService accService;
+
+	@PostMapping("/add")
+	public List<Account> addAccount(@RequestBody Account saving) {
+		return accService.addAccount(saving);
+
+	}
+
+	@PostMapping("/saving")
+	public List<SavingsAccount> addSavingAccount(@RequestBody SavingsAccount saving) throws InvalidDetailsException {
+		List<SavingsAccount> t = null;
+		try {
+			t = accService.addSavingsAccount(saving);
+		} catch (Exception e) {
+			throw new InvalidDetailsException("Invalid details kindly check!");
+		}
+		return t;
+	}
+
+	@PostMapping("/term")
+	public List<TermAccount> addTermAccount(@RequestBody TermAccount term) throws InvalidDetailsException {
+		List<TermAccount> t = null;
+		try {
+			t = accService.addTermAccount(term);
+		} catch (Exception e) {
+			throw new InvalidDetailsException("Invalid details kindly check!");
+		}
+		return t;
+	}
+
+	@DeleteMapping("close-saving/{accountId}")
+	public boolean closeSavingAccount(@PathVariable long accountId) throws InvalidAccountException {
+		if (accountId != 0) {
+			try {
+				accService.deleteSavingId(accountId);
+				return true;
+			}
+
+			catch (Exception e) {
+				throw new InvalidAccountException("Account can't be deleted ");
+			}
+		}
+		return false;
+	}
+
+	@DeleteMapping("close-term/{accountId}")
+	public boolean closeTermAccount(@PathVariable long accountId) throws InvalidAccountException {
+		if (accountId != 0) {
+			try {
+				accService.deleteTermId(accountId);
+				return true;
+			} catch (Exception e) {
+				throw new InvalidAccountException("Account can't be deleted ");
+			}
+		}
+		return false;
+	}
+
+	@GetMapping("/{accountId}")
+	public Account findAccount(@PathVariable long accountId) {
+
+		return accService.getAccountByID(accountId);
+
+	}
+
+	@PutMapping("/update/saving")
+	public List<SavingsAccount> updateSavingsAccount(@RequestBody SavingsAccount updS) throws InvalidDetailsException {
+		List<SavingsAccount> t = null;
+		try {
+			t = accService.updateSavingsAccount(updS);
+		} catch (Exception e) {
+			throw new InvalidDetailsException("Invalid details kindly check!");
+		}
+		return t;
+	}
+
+	@PutMapping("/update/term")
+	public List<TermAccount> updateTermAccount(@RequestBody TermAccount updT) throws InvalidDetailsException {
+		List<TermAccount> t = null;
+		try {
+			t = accService.updateTermAccount(updT);
+		} catch (Exception e) {
+			throw new InvalidDetailsException("Invalid details kindly check!");
+		}
+		return t;
+	}
+
+	@PostMapping("/deposit/{accountId}")
+	public Transaction deposit(@PathVariable long accountId, @RequestBody double amount ) {
+		return accService.deposit(amount, accountId);
+
+	}
+
+	@PostMapping("/withdraw/{accountId}")
+	public Transaction withdraw(@PathVariable long accountId, @RequestBody double amount, long customerId,
+			String password) {
+		return accService.withdraw(amount, accountId, customerId, password);
+
+	}
+
+	@GetMapping("find/{customerId}")
+	public List<Account> viewAccount(@PathVariable long customerId) throws InvalidDetailsException {
+		List<Account> a = null;
+		try {
+			a = accService.viewAccounts(customerId);
+		} catch (Exception e) {
+			throw new InvalidDetailsException("Invalid details kindly check!");
+		}
+
+		return a;
+
+	}
+
+	@GetMapping("findSaving/{customerId}")
+	public List<Account> viewSavingAccount(@PathVariable long customerId) {
+
+		return accService.viewSavingAcc(customerId);
+
+	}
+
+	@GetMapping("findTerm/{customerId}")
+	public List<Account> viewTermAccount(@PathVariable long customerId) {
+
+		return accService.viewTermAcc(customerId);
+
+	}
+	
+	@PostMapping("transfer")
+	public Transaction transferMoney(@RequestBody long senderAccountId,long reciverAccountId, double amount,long customerId, String password) {
+		return accService.transferMoney(senderAccountId, reciverAccountId, amount, customerId, password);
+	}
+
+
+}
